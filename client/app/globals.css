@@ -1,0 +1,52 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+html {
+  background: #0a0a0a;
+}
+
+body {
+  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+  background: #0a0a0a;
+  color: #fff;
+  transition: background 0.3s, color 0.3s;
+}
+
+
+
+
+/* Only dark theme styles below */
+.bg-glass {
+  background: rgba(24,24,27,0.7);
+  border: 1.5px solid rgba(255,255,255,0.08);
+  box-shadow: 0 4px 32px 0 rgba(99,102,241,0.08);
+  backdrop-filter: blur(16px);
+  transition: background 0.3s, border 0.3s, box-shadow 0.3s;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  background: #18181b;
+}
+::-webkit-scrollbar-thumb {
+  background: #6366f1;
+  border-radius: 8px;
+}
+
+/* Glassmorphism effect */
+.bg-glass {
+  background: rgba(255,255,255,0.07);
+  border: 1.5px solid rgba(255,255,255,0.10);
+  box-shadow: 0 4px 32px 0 rgba(99,102,241,0.08);
+  backdrop-filter: blur(16px);
+  transition: background 0.3s, border 0.3s, box-shadow 0.3s;
+}
+
+/* Bento grid helpers */
+.bento {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+}
