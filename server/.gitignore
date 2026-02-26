@@ -7,6 +7,9 @@ logs/
 
 # Environment variables
 .env
+.enc.loca
 
 # Misc
 .DS_Store
+# Build output
+dist/

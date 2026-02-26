@@ -1,5 +1,6 @@
+
 import Hero from './components/Hero';
-import Marketplace from './components/Marketplace';
+import CategoriesPage from './categories/page';
 import AISpark from './components/AISpark';
 import HireBuilder from './components/HireBuilder';
 
@@ -7,7 +8,7 @@ export default function Home() {
   return (
     <>
       <Hero />
-      <Marketplace />
+      <CategoriesPage />
       <AISpark />
       <HireBuilder />
     </>

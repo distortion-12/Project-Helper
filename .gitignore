@@ -1,3 +1,7 @@
+# Ignore non-essential files
+client/IMPfiles/
+IMPfiles/
+server/IMPfiles/
 # Node.js
 node_modules/
 .env
@@ -50,3 +54,6 @@ client/public/uploads/
 # Ignore config secrets
 server/config/*.local.js
 server/config/*.secret.js
+
+#Data files
+*.csv

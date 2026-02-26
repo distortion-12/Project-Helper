@@ -1,0 +1,120 @@
+// Prisma schema for ProjectNexus SaaS Platform
+// DB: PostgreSQL
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String?
+  image        String?
+  role         UserRole @default(STUDENT)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  // Relations
+  projectListings ProjectListing[]
+  serviceRequests ServiceRequest[]
+  bids           Bid[]
+  transactions   Transaction[]
+}
+
+enum UserRole {
+  STUDENT
+  DEVELOPER
+}
+
+model ProjectListing {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  price       Int
+  techStack   String[]
+  image       String?
+  isVerified  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  // Relations
+  ownerId     String
+  owner       User     @relation(fields: [ownerId], references: [id])
+  transactions Transaction[]
+}
+
+model ServiceRequest {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  budget      Int
+  deadline    DateTime
+  status      ServiceStatus @default(OPEN)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  // Relations
+  requesterId String
+  requester   User     @relation(fields: [requesterId], references: [id])
+  bids        Bid[]
+  transactions Transaction[]
+}
+
+enum ServiceStatus {
+  OPEN
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+model Bid {
+  id              String   @id @default(cuid())
+  amount          Int
+  message         String
+  status          BidStatus @default(PENDING)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  // Relations
+  bidderId        String
+  bidder          User     @relation(fields: [bidderId], references: [id])
+  serviceRequestId String
+  serviceRequest  ServiceRequest @relation(fields: [serviceRequestId], references: [id])
+}
+
+enum BidStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+
+model Transaction {
+  id            String   @id @default(cuid())
+  amount        Int
+  currency      String   @default("INR")
+  status        TransactionStatus @default(PENDING)
+  type          TransactionType
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  // Relations
+  userId        String
+  user          User     @relation(fields: [userId], references: [id])
+  projectListingId String?
+  projectListing   ProjectListing? @relation(fields: [projectListingId], references: [id])
+  serviceRequestId String?
+  serviceRequest   ServiceRequest? @relation(fields: [serviceRequestId], references: [id])
+  razorpayOrderId  String?
+  razorpayPaymentId String?
+}
+
+enum TransactionStatus {
+  PENDING
+  SUCCESS
+  FAILED
+}
+
+enum TransactionType {
+  PROJECT_PURCHASE
+  SERVICE_PAYMENT
+  BID_PAYMENT
+}
