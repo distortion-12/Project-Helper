@@ -1,3 +1,9 @@
+model ContactMessage {
+  id        String   @id @default(cuid())
+  email     String
+  message   String
+  createdAt DateTime @default(now())
+}
 // Prisma schema for ProjectNexus SaaS Platform
 // DB: PostgreSQL
 

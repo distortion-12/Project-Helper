@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import ContactForm from "../components/ContactForm";
 import { BookOpen, Shield, Cpu, Globe, Users, BarChart2, Music, ShoppingCart, Activity, Lock } from "lucide-react";
 
 
@@ -23,9 +24,12 @@ async function fetchProjects() {
   return res.json();
 }
 
+
 export default function CategoriesPage() {
   const [projects, setProjects] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [showContact, setShowContact] = useState(false);
+  const [selectedProject, setSelectedProject] = useState(null);
 
   useEffect(() => {
     fetchProjects().then((data) => {
@@ -94,7 +98,8 @@ export default function CategoriesPage() {
             {filteredProjects.map((project) => (
               <div
                 key={project.id || project.title}
-                className="rounded-xl bg-zinc-900 p-6 shadow-lg border border-zinc-800 flex flex-col justify-between"
+                className="rounded-xl bg-zinc-900 p-6 shadow-lg border border-zinc-800 flex flex-col justify-between cursor-pointer hover:ring-2 hover:ring-indigo-500 transition"
+                onClick={() => setSelectedProject(project)}
               >
                 <div>
                   <h3 className="text-xl font-semibold mb-2">{project.title || project.name}</h3>
@@ -120,13 +125,59 @@ export default function CategoriesPage() {
                     ))}
                   </div>
                 </div>
-                {/* Optionally, add a button to view more details */}
               </div>
             ))}
             {filteredProjects.length === 0 && (
               <div className="col-span-full text-zinc-400">No projects found in this category.</div>
             )}
           </div>
+        {/* Modal for Project Details and Contact Form */}
+        {selectedProject && (
+          <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+            <div className="bg-zinc-900 rounded-xl shadow-2xl p-6 min-w-[350px] max-w-[95vw] relative">
+              <button
+                className="absolute top-2 right-2 text-zinc-400 hover:text-white text-2xl"
+                onClick={() => { setSelectedProject(null); setShowContact(false); }}
+                aria-label="Close"
+              >
+                &times;
+              </button>
+              <h3 className="text-xl font-bold mb-2">{selectedProject.title || selectedProject.name}</h3>
+              <p className="mb-4 text-zinc-300 text-sm">{selectedProject.description}</p>
+              <div className="flex flex-wrap gap-2 mb-4">
+                {(
+                  Array.isArray(selectedProject.tech)
+                    ? selectedProject.tech
+                    : typeof selectedProject.tech === "string"
+                      ? selectedProject.tech.replace(/[{}]/g, '').split(',').map(t => t.trim()).filter(Boolean)
+                      : Array.isArray(selectedProject.tags)
+                        ? selectedProject.tags
+                        : typeof selectedProject.tags === "string"
+                          ? selectedProject.tags.replace(/[{}]/g, '').split(',').map(t => t.trim()).filter(Boolean)
+                          : []
+                ).map((tag) => (
+                  <span
+                    key={tag}
+                    className="bg-indigo-700/30 text-indigo-200 px-2 py-1 rounded text-xs font-medium"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+              {!showContact && (
+                <button
+                  className="w-full mt-4 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded font-semibold transition"
+                  onClick={() => setShowContact(true)}
+                >
+                  Connect to Admin for Project Help
+                </button>
+              )}
+              {showContact && (
+                <ContactForm onClose={() => setShowContact(false)} />
+              )}
+            </div>
+          </div>
+        )}
         </div>
       )}
     </div>
