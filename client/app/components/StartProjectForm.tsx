@@ -1,10 +1,11 @@
+"use client";
 import React, { useState } from "react";
 
 const BUDGET_OPTIONS = [
-  "$1K - $5K",
-  "$5K - $10K",
-  "$10K - $25K",
-  "$25K+",
+  "₹1K - ₹5K",
+  "₹5K - ₹10K",
+  "₹10K - ₹15K",
+  "₹15K - ₹20K",
   "Other",
 ];
 
@@ -23,7 +24,7 @@ export default function StartProjectForm() {
     setLoading(true);
     setError("");
     try {
-      const res = await fetch("/api/start-project", {
+      const res = await fetch("http://localhost:5000/api/start-project", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, phone, budget, message }),
@@ -74,7 +75,7 @@ export default function StartProjectForm() {
         onChange={e => setPhone(e.target.value)}
       />
       <div>
-        <div className="mb-2 text-sm text-zinc-300">Project Budget</div>
+        <div className="mb-2 text-sm text-zinc-300">Project Budget (INR)</div>
         <div className="flex flex-wrap gap-2">
           {BUDGET_OPTIONS.map(opt => (
             <button

@@ -15,14 +15,40 @@ export default function HireBuilder() {
   const [step, setStep] = useState(0);
   const [form, setForm] = useState<any>({});
   const [submitted, setSubmitted] = useState(false);
+  const [showError, setShowError] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setForm({ ...form, [steps[step].key]: e.target.value });
+    setShowError(false);
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
+    if (!isStepFilled()) {
+      setShowError(true);
+      return;
+    }
     if (step < steps.length - 1) setStep(step + 1);
-    else setSubmitted(true);
+    else {
+      // Submit form to backend
+      try {
+        await fetch('/api/hire-builder', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(form),
+        });
+      } catch (err) {
+        // Optionally show error to user
+      }
+      setSubmitted(true);
+    }
+    setShowError(false);
+  };
+
+  // Check if current step is filled (except description)
+  const isStepFilled = () => {
+    // Step 1 is description, which can be empty
+    if (step === 1) return true;
+    return !!form[steps[step].key];
   };
 
   return (
@@ -46,7 +72,7 @@ export default function HireBuilder() {
               </label>
               {step === 1 ? (
                 <textarea
-                  className="w-full px-5 py-4 rounded-xl bg-white/10 border border-white/10 text-white text-base focus:ring-2 focus:ring-indigo-400 outline-none transition mb-2 resize-none min-h-[96px]"
+                  className={`w-full px-5 py-4 rounded-xl bg-white/10 border text-white text-base focus:ring-2 focus:ring-indigo-400 outline-none transition mb-2 resize-none min-h-[96px] ${showError ? 'border-red-500' : 'border-white/10'}`}
                   placeholder={steps[step].placeholder}
                   value={form[steps[step].key] || ''}
                   onChange={handleChange}
@@ -55,7 +81,7 @@ export default function HireBuilder() {
                 />
               ) : (
                 <input
-                  className="w-full px-5 py-4 rounded-xl bg-white/10 border border-white/10 text-white text-base focus:ring-2 focus:ring-indigo-400 outline-none transition mb-2"
+                  className={`w-full px-5 py-4 rounded-xl bg-white/10 border text-white text-base focus:ring-2 focus:ring-indigo-400 outline-none transition mb-2 ${showError ? 'border-red-500' : 'border-white/10'}`}
                   placeholder={steps[step].placeholder}
                   value={form[steps[step].key] || ''}
                   onChange={handleChange}
@@ -65,9 +91,10 @@ export default function HireBuilder() {
               )}
               <div className="flex items-center justify-between mt-2">
                 <button
-                  className="px-8 py-3 rounded-full bg-indigo-500 hover:bg-indigo-600 text-white font-bold text-lg shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                  className="px-8 py-3 rounded-full bg-indigo-500 hover:bg-indigo-600 text-white font-bold text-lg shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-indigo-400 disabled:bg-gray-500 disabled:cursor-not-allowed"
                   onClick={handleNext}
                   type="button"
+                  disabled={!isStepFilled()}
                 >
                   {step < steps.length - 1 ? 'Next' : 'Submit'}
                 </button>

@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import ContactForm from "../components/ContactForm";
 import { BookOpen, Shield, Cpu, Globe, Users, BarChart2, Music, ShoppingCart, Activity, Lock } from "lucide-react";
 
@@ -70,18 +71,20 @@ export default function CategoriesPage() {
 
   return (
     <div className="min-h-screen bg-black text-white p-8">
-      <h1 className="text-3xl font-bold mb-8">Browse by Category</h1>
+      <h1 className="text-4xl md:text-5xl font-extrabold mb-12 text-left">
+        <span className="text-green-400">Browse by Category</span>
+      </h1>
       {!selectedCategory ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10">
           {CATEGORY_MAP.map(({ key, icon: Icon }) => (
             <button
               key={key}
-              className="rounded-2xl bg-gradient-to-br from-zinc-900 to-zinc-800 hover:from-indigo-700 hover:to-indigo-900 transition p-8 text-2xl font-bold shadow-xl border border-zinc-800 flex flex-col items-center gap-4 group"
+              className="rounded-3xl bg-gradient-to-br from-black via-zinc-900 to-black hover:from-green-900 hover:to-green-700 transition-all duration-200 p-10 text-2xl font-bold shadow-2xl border-2 border-zinc-800 flex flex-col items-center gap-4 group hover:scale-105 focus:outline-none focus:ring-4 focus:ring-green-400/40"
               onClick={() => setSelectedCategory(key)}
             >
-              <Icon className="w-10 h-10 text-indigo-400 group-hover:scale-110 transition-transform" />
+              <Icon className="w-12 h-12 text-green-400 group-hover:scale-110 transition-transform" />
               <span>{key}</span>
-              <span className="text-xs text-indigo-200 mt-2">{projectsByCategory[key]?.length || 0} Projects</span>
+              <span className="text-xs text-green-300 mt-2">{projectsByCategory[key]?.length || 0} Projects</span>
             </button>
           ))}
         </div>
@@ -94,16 +97,16 @@ export default function CategoriesPage() {
             ← Back to Categories
           </button>
           <h2 className="text-2xl font-bold mb-4">{selectedCategory} Projects</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredProjects.map((project) => (
               <div
                 key={project.id || project.title}
-                className="rounded-xl bg-zinc-900 p-6 shadow-lg border border-zinc-800 flex flex-col justify-between cursor-pointer hover:ring-2 hover:ring-indigo-500 transition"
+                className="rounded-3xl bg-gradient-to-br from-black via-zinc-900 to-black p-8 shadow-2xl border-2 border-zinc-800 flex flex-col justify-between cursor-pointer hover:ring-4 hover:ring-green-400/40 transition-all duration-200 hover:scale-105"
                 onClick={() => setSelectedProject(project)}
               >
                 <div>
-                  <h3 className="text-xl font-semibold mb-2">{project.title || project.name}</h3>
-                  <p className="mb-4 text-zinc-300 text-sm">{project.description}</p>
+                  <h3 className="text-2xl font-bold mb-2 text-green-400">{project.title || project.name}</h3>
+                  <p className="mb-4 text-zinc-300 text-base">{project.description}</p>
                   <div className="flex flex-wrap gap-2 mb-4">
                     {(
                       Array.isArray(project.tech)
@@ -118,7 +121,7 @@ export default function CategoriesPage() {
                     ).map((tag) => (
                       <span
                         key={tag}
-                        className="bg-indigo-700/30 text-indigo-200 px-2 py-1 rounded text-xs font-medium"
+                        className="bg-green-700/30 text-green-200 px-2 py-1 rounded text-xs font-medium"
                       >
                         {tag}
                       </span>
@@ -132,52 +135,66 @@ export default function CategoriesPage() {
             )}
           </div>
         {/* Modal for Project Details and Contact Form */}
-        {selectedProject && (
-          <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
-            <div className="bg-zinc-900 rounded-xl shadow-2xl p-6 min-w-[350px] max-w-[95vw] relative">
-              <button
-                className="absolute top-2 right-2 text-zinc-400 hover:text-white text-2xl"
-                onClick={() => { setSelectedProject(null); setShowContact(false); }}
-                aria-label="Close"
+        <AnimatePresence>
+          {selectedProject && (
+            <motion.div
+              className="fixed inset-0 bg-black/80 flex items-center justify-center z-50"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              <motion.div
+                className="bg-gradient-to-br from-black via-zinc-900 to-black rounded-3xl shadow-2xl p-8 min-w-[350px] max-w-[95vw] relative border-2 border-green-700"
+                initial={{ scale: 0.95, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.95, opacity: 0 }}
+                transition={{ duration: 0.2 }}
               >
-                &times;
-              </button>
-              <h3 className="text-xl font-bold mb-2">{selectedProject.title || selectedProject.name}</h3>
-              <p className="mb-4 text-zinc-300 text-sm">{selectedProject.description}</p>
-              <div className="flex flex-wrap gap-2 mb-4">
-                {(
-                  Array.isArray(selectedProject.tech)
-                    ? selectedProject.tech
-                    : typeof selectedProject.tech === "string"
-                      ? selectedProject.tech.replace(/[{}]/g, '').split(',').map(t => t.trim()).filter(Boolean)
-                      : Array.isArray(selectedProject.tags)
-                        ? selectedProject.tags
-                        : typeof selectedProject.tags === "string"
-                          ? selectedProject.tags.replace(/[{}]/g, '').split(',').map(t => t.trim()).filter(Boolean)
-                          : []
-                ).map((tag) => (
-                  <span
-                    key={tag}
-                    className="bg-indigo-700/30 text-indigo-200 px-2 py-1 rounded text-xs font-medium"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-              {!showContact && (
                 <button
-                  className="w-full mt-4 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded font-semibold transition"
-                  onClick={() => setShowContact(true)}
+                  className="absolute top-4 right-6 text-zinc-400 hover:text-white text-3xl font-bold focus:outline-none"
+                  onClick={() => { setSelectedProject(null); setShowContact(false); }}
+                  aria-label="Close"
                 >
-                  Connect to Admin for Project Help
+                  &times;
                 </button>
-              )}
-              {showContact && (
-                <ContactForm onClose={() => setShowContact(false)} />
-              )}
-            </div>
-          </div>
-        )}
+                <h3 className="text-3xl font-extrabold mb-2 text-green-400">{selectedProject.title || selectedProject.name}</h3>
+                <p className="mb-6 text-zinc-200 text-lg">{selectedProject.description}</p>
+                <div className="flex flex-wrap gap-2 mb-6">
+                  {(
+                    Array.isArray(selectedProject.tech)
+                      ? selectedProject.tech
+                      : typeof selectedProject.tech === "string"
+                        ? selectedProject.tech.replace(/[{}]/g, '').split(',').map(t => t.trim()).filter(Boolean)
+                        : Array.isArray(selectedProject.tags)
+                          ? selectedProject.tags
+                          : typeof selectedProject.tags === "string"
+                            ? selectedProject.tags.replace(/[{}]/g, '').split(',').map(t => t.trim()).filter(Boolean)
+                            : []
+                  ).map((tag) => (
+                    <span
+                      key={tag}
+                      className="bg-green-700/30 text-green-200 px-3 py-1 rounded-full text-sm font-semibold tracking-wide shadow-sm"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+                {!showContact && (
+                  <button
+                    className="w-full mt-2 px-6 py-3 bg-green-500 hover:bg-green-400 text-black rounded-full font-bold text-lg shadow-lg border border-green-400 transition-all duration-200"
+                    onClick={() => setShowContact(true)}
+                  >
+                    Connect to Admin for Project Help
+                  </button>
+                )}
+                {showContact && (
+                  <ContactForm onClose={() => setShowContact(false)} />
+                )}
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
         </div>
       )}
     </div>

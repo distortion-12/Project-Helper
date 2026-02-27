@@ -4,32 +4,28 @@ import { motion } from 'framer-motion';
 
 export default function Hero() {
   return (
-    <section className="flex flex-col items-center justify-center min-h-[80vh] w-full text-center select-none bg-transparent">
-      <motion.h1
-        initial={{ opacity: 0, y: 40 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        className="text-4xl md:text-6xl font-extrabold mb-6 relative"
-        style={{
-          background: 'linear-gradient(90deg, #6366f1, #a5b4fc, #6366f1)',
-          backgroundSize: '200% 200%',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
-          animation: 'gradient-move 3s ease-in-out infinite',
-        }}
-      >
-        <TypewriterHeadline />
-      </motion.h1>
-      <p className="text-lg md:text-2xl text-white/70 max-w-xl mx-auto">
-        The SaaS marketplace for student projects. Discover, build, or hire talent for your next big grade.
-      </p>
-      <style>{`
-        @keyframes gradient-move {
-          0% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-          100% { background-position: 0% 50%; }
-        }
-      `}</style>
+    <section className="flex flex-col md:flex-row items-center justify-center min-h-[80vh] w-full px-4 md:px-16 py-12 gap-8 bg-transparent">
+      <div className="flex-1 flex flex-col items-start justify-center text-left">
+        <motion.h1
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="text-4xl md:text-6xl font-extrabold mb-6 leading-tight"
+        >
+          <span className="block text-white">LET’S CREATE</span>
+          <span className="block text-green-400">SOMETHING EPIC</span>
+          <span className="block text-white">TOGETHER.</span>
+        </motion.h1>
+        <p className="text-lg md:text-2xl text-white/70 max-w-xl mb-8">
+          The SaaS marketplace for student projects. Discover, build, or hire talent for your next big grade.
+        </p>
+        <a href="#contact" className="inline-block px-8 py-3 rounded-full bg-green-500 hover:bg-green-400 text-black font-bold text-lg shadow-lg border border-green-400 transition-all duration-200" style={{ boxShadow: '0 2px 16px 0 #00ffb3a0' }}>
+          START A PROJECT
+        </a>
+      </div>
+      <div className="flex-1 flex items-center justify-center">
+        {/* Optionally, add an illustration or animation here */}
+      </div>
     </section>
   );
 }

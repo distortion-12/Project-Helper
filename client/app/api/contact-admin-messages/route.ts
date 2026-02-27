@@ -1,7 +1,8 @@
 
 import { NextResponse } from "next/server";
-import { supabase } from "../../lib/supabaseClient";
+import { supabase } from "../_supabaseServer";
 
+export async function GET() {
   // Fetch messages from Supabase
   const { data, error } = await supabase
     .from("ContactMessage")
@@ -13,6 +14,7 @@ import { supabase } from "../../lib/supabaseClient";
   return NextResponse.json({ messages: data });
 }
 
+export async function POST(req: Request) {
   const { email, message } = await req.json();
   const { error } = await supabase
     .from("ContactMessage")

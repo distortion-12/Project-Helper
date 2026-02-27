@@ -30,11 +30,11 @@ router.post('/admin-login', async (req, res) => {
       const sessionToken = require('crypto').randomBytes(32).toString('hex');
       // Set secure cookie (HttpOnly, SameSite, etc.)
       res.cookie('admin_auth', sessionToken, {
-        httpOnly: true,
+        httpOnly: false, // allow client-side access
         sameSite: 'None',
         maxAge: 86400 * 1000,
         secure: false,
-        domain: 'localhost',
+        // domain removed for local dev
       });
       // Optionally: store sessionToken in memory or DB for validation
       console.log('[ADMIN LOGIN] Login success');
