@@ -42,13 +42,24 @@ export default function CategoriesPage() {
   // Map each project to a high-level category
   function getCategoryForProject(project) {
     let tags = [];
+    // Handle tech as array or string
     if (Array.isArray(project.tech)) {
-      tags = project.tech.map(t => t.toLowerCase());
+      tags = project.tech.flatMap(t =>
+        typeof t === 'string' ? t.split(',').map(s => s.trim().toLowerCase()) : []
+      );
     } else if (typeof project.tech === 'string') {
       tags = project.tech.replace(/[{}]/g, '').split(',').map(t => t.trim().toLowerCase());
-    } else if (Array.isArray(project.tags)) {
-      tags = project.tags.map(t => t.toLowerCase());
     }
+    // Also handle tags field if present
+    if (Array.isArray(project.tags)) {
+      tags = tags.concat(project.tags.flatMap(t =>
+        typeof t === 'string' ? t.split(',').map(s => s.trim().toLowerCase()) : []
+      ));
+    } else if (typeof project.tags === 'string') {
+      tags = tags.concat(project.tags.replace(/[{}]/g, '').split(',').map(t => t.trim().toLowerCase()));
+    }
+    // Remove empty and deduplicate
+    tags = Array.from(new Set(tags.filter(Boolean)));
     for (const cat of CATEGORY_MAP) {
       if (cat.tags.some(tag => tags.includes(tag.toLowerCase()))) {
         return cat.key;
