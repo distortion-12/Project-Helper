@@ -19,6 +19,7 @@ app.use(logger);
 
 // Use API routes
 const apiRouter = require('./routes/api');
+console.log('API router registered');
 app.use('/api', apiRouter);
 app.get('/', (req, res) => {
   res.send('Welcome to the backend server!');

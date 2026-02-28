@@ -1,3 +1,4 @@
+console.log('api.js loaded');
 const express = require('express');
 const router = express.Router();
 
