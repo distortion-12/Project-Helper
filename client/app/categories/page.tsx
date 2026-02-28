@@ -34,7 +34,7 @@ export default function CategoriesPage() {
 
   useEffect(() => {
     fetchProjects().then((data) => {
-      setProjects(data.projects || []);
+      setProjects(data.data || []);
     });
   }, []);
 
