@@ -6,6 +6,9 @@ import { ReactNode } from 'react';
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+      </head>
       <body className="bg-black text-white min-h-screen transition-colors duration-300 font-sans">
         <Navbar />
         <main className="min-h-[80vh] flex flex-col items-stretch justify-start bg-gradient-to-br from-black via-zinc-900 to-black">
