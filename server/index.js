@@ -24,6 +24,12 @@ app.get('/', (req, res) => {
   res.send('Welcome to the backend server!');
 });
 
+
+// Catch-all 404 handler for unmatched routes
+app.use((req, res) => {
+  res.status(404).send('API route not found');
+});
+
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
