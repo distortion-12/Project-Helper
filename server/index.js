@@ -9,7 +9,8 @@ const PORT = process.env.PORT || 5000;
 app.use(cors({
   origin: [
     'http://localhost:3000',
-    'https://project-nexus-ula.vercel.app' //Vercel frontend URL
+    'https://project-nexus-ula.vercel.app',
+    'https://project-nexus-wala.vercel.app' // allow both possible Vercel domains
   ],
   credentials: true
 }));
