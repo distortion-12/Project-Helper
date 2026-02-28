@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import { FolderKanban } from "lucide-react";
 import dynamic from "next/dynamic";
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -34,8 +35,9 @@ export default function Navbar() {
   return (
     <>
       <nav className="sticky top-0 z-50 bg-black/80 backdrop-blur border-b border-white/10 py-4 px-10 flex items-center justify-between shadow-xl">
-        <div className="font-extrabold text-2xl tracking-tight text-white drop-shadow-lg">
-          <span className="text-green-400">Project</span>Nexus
+        <div className="flex items-center gap-2 font-extrabold text-2xl tracking-tight text-white drop-shadow-lg">
+          <FolderKanban className="w-7 h-7 text-green-400" />
+          <span><span className="text-green-400">Project</span>Nexus</span>
         </div>
         <ul className="flex gap-10 text-base font-semibold items-center">
           <li><a href="#whatwedo" className={"hover:text-green-400 transition " + (active === "whatwedo" ? "text-green-400" : "")}>What We Do</a></li>
