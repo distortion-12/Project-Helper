@@ -60,11 +60,15 @@ export default function CategoriesPage() {
     }
     // Remove empty and deduplicate
     tags = Array.from(new Set(tags.filter(Boolean)));
+    // Debug log for mapping
+    console.log("Project:", project.title, "tags:", tags);
     for (const cat of CATEGORY_MAP) {
       if (cat.tags.some(tag => tags.includes(tag.toLowerCase()))) {
+        console.log(`Project '${project.title}' matched category '${cat.key}'`);
         return cat.key;
       }
     }
+    console.log(`Project '${project.title}' matched category 'Other'`);
     return "Other";
   }
 
