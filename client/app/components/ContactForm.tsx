@@ -12,7 +12,7 @@ export default function ContactForm({ onClose }: { onClose: () => void }) {
     setLoading(true);
     setError("");
     try {
-      const res = await fetch("/api/contact-admin-messages", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/contact-admin-messages`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, message }),

@@ -28,7 +28,7 @@ export default function Marketplace() {
     if (selectedTech) params.append('tech', selectedTech);
     if (minPrice > 0) params.append('minPrice', String(minPrice));
     if (maxPrice < 100000) params.append('maxPrice', String(maxPrice));
-    const url = `/api/projects${params.size ? '?' + params.toString() : ''}`;
+    const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/projects${params.size ? '?' + params.toString() : ''}`;
     try {
       const res = await fetch(url);
       const json = await res.json();

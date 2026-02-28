@@ -8,6 +8,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@prisma/internals": "^7.4.2",
     "@supabase/supabase-js": "^2.98.0",
     "autoprefixer": "^10.4.0",
     "bcryptjs": "^3.0.3",

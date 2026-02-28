@@ -31,7 +31,7 @@ export default function HireBuilder() {
     else {
       // Submit form to backend
       try {
-        await fetch('/api/hire-builder', {
+        await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/hire-builder`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(form),

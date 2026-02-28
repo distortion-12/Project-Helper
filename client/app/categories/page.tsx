@@ -20,7 +20,7 @@ const CATEGORY_MAP = [
 ];
 
 async function fetchProjects() {
-  const res = await fetch("/api/projects");
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/projects`);
   if (!res.ok) throw new Error("Failed to fetch projects");
   return res.json();
 }
