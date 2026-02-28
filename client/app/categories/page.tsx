@@ -64,17 +64,16 @@ export default function CategoriesPage() {
     console.log("Project:", project.title, "tags:", tags);
     let matched = false;
     for (const cat of CATEGORY_MAP) {
-      const found = cat.tags.some(tag => tags.includes(tag.toLowerCase()));
-      console.log(`Project '${project.title}' tags:`, tags, '| Category:', cat.key, '| Match:', found);
-      if (found) {
-        console.log(`Project '${project.title}' matched category '${cat.key}'`);
-        matched = true;
-        return cat.key;
+      for (const tag of cat.tags) {
+        if (tags.includes(tag.toLowerCase())) {
+          console.log(`Project '${project.title}' matched category '${cat.key}' with tag '${tag}'`);
+          matched = true;
+          return cat.key;
+        }
       }
     }
-    // If no match, always show in 'Other'
     if (!matched) {
-      console.log(`Project '${project.title}' matched category 'Other'`);
+      console.log(`Project '${project.title}' did not match any category, placing in 'Other'`);
     }
     return "Other";
   }
