@@ -28,14 +28,23 @@ async function fetchProjects() {
 
 export default function CategoriesPage() {
   const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [showContact, setShowContact] = useState(false);
   const [selectedProject, setSelectedProject] = useState(null);
 
   useEffect(() => {
-    fetchProjects().then((data) => {
-      setProjects(data.data || []);
-    });
+    setLoading(true);
+    fetchProjects()
+      .then((data) => {
+        setProjects(data.data || []);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching projects:", error);
+        setProjects([]);
+        setLoading(false);
+      });
   }, []);
 
 
@@ -105,7 +114,9 @@ export default function CategoriesPage() {
             >
               <Icon className="w-12 h-12 text-green-400 group-hover:scale-110 transition-transform" />
               <span>{key}</span>
-              <span className="text-xs text-green-300 mt-2">{projectsByCategory[key]?.length || 0} Projects</span>
+              <span className="text-xs text-green-300 mt-2">
+                {loading ? "Loading projects" : `${projectsByCategory[key]?.length || 0} Projects`}
+              </span>
             </button>
           ))}
         </div>
