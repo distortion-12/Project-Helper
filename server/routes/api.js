@@ -21,4 +21,8 @@ router.use(hireBuilderRoutes);
 const startProjectRoutes = require('./startProject');
 router.use(startProjectRoutes);
 
+// Contact admin messages route
+const contactAdminRoutes = require('./contactAdmin');
+router.use(contactAdminRoutes);
+
 module.exports = router;
