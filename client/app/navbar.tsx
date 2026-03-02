@@ -41,7 +41,7 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className="sticky top-0 z-50 bg-black/80 backdrop-blur border-b border-white/10 py-4 px-4 md:px-10 flex items-center justify-between shadow-xl gap-4">
+      <nav className="sticky top-0 z-50 bg-black/80 backdrop-blur border-b border-white/10 py-4 md:py-2 px-8 md:px-24 flex items-center justify-between shadow-xl gap-1 md:gap-2">
         <button
           onClick={scrollToTop}
           className="flex items-center gap-2 font-extrabold tracking-tight text-white drop-shadow-lg hover:opacity-80 transition cursor-pointer flex-shrink-0"
@@ -57,22 +57,24 @@ export default function Navbar() {
             <div>Nexus</div>
           </span>
         </button>
-        <ul className="flex gap-6 md:gap-10 text-sm md:text-base font-semibold items-center flex-shrink-0">
+        <ul className="flex gap-6 md:gap-8 text-sm md:text-base font-semibold items-center flex-shrink-0">
           <li><a href="#whatwedo" onClick={scrollToTop} className={"hover:text-green-400 transition " + (active === "whatwedo" ? "text-green-400" : "")}>What We Do</a></li>
           <li><a href="#categories" onClick={scrollToTop} className={"hover:text-green-400 transition " + (active === "projects" ? "text-green-400" : "")}>Projects</a></li>
           <li><a href="#hire" onClick={scrollToTop} className={"hover:text-green-400 transition " + (active === "company" ? "text-green-400" : "")}>Hire</a></li>
+          <li>
+            <button
+              className="w-14 h-14 md:w-16 md:h-16 flex items-center justify-center rounded-full bg-green-500 hover:bg-green-400 text-black font-bold text-xs md:text-sm shadow-lg border border-green-400 transition-all duration-200 flex-shrink-0"
+              style={{ boxShadow: '0 2px 16px 0 #00ffb3a0' }}
+              onClick={() => setShowForm(true)}
+            >
+              <div className="text-center leading-tight">
+                <div>LET'S</div>
+                <div>TALK</div>
+                <div>↗</div>
+              </div>
+            </button>
+          </li>
         </ul>
-        <button
-          className="w-16 h-16 md:w-20 md:h-20 flex items-center justify-center rounded-full bg-green-500 hover:bg-green-400 text-black font-bold text-xs md:text-base shadow-lg border border-green-400 transition-all duration-200 flex-shrink-0"
-          style={{ boxShadow: '0 2px 16px 0 #00ffb3a0' }}
-          onClick={() => setShowForm(true)}
-        >
-          <div className="text-center leading-tight">
-            <div>LET'S</div>
-            <div>TALK</div>
-            <div>↗</div>
-          </div>
-        </button>
       </nav>
       <AnimatePresence>
         {showForm && (
