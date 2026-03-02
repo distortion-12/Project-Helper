@@ -41,4 +41,24 @@ router.post('/start-project', async (req, res) => {
   }
 });
 
+// GET /api/start-project-requests - Fetch all start project requests
+router.get('/start-project-requests', async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from('StartProjectRequests')
+      .select('*')
+      .order('createdat', { ascending: false });
+
+    if (error) {
+      console.log('Supabase fetch error:', error);
+      return res.status(500).json({ success: false, error: error.message });
+    }
+
+    return res.json({ success: true, requests: data });
+  } catch (err) {
+    console.error('Server error:', err);
+    return res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
 module.exports = router;

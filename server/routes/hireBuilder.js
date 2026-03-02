@@ -32,4 +32,24 @@ router.post('/hire-builder', async (req, res) => {
   }
 });
 
+// GET /api/hire-builder-requests - Fetch all hire builder requests
+router.get('/hire-builder-requests', async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from('HireBuilderRequests')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.log('Supabase fetch error:', error);
+      return res.status(500).json({ success: false, error: error.message });
+    }
+
+    return res.json({ success: true, requests: data });
+  } catch (err) {
+    console.error('Server error:', err);
+    return res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
 module.exports = router;
