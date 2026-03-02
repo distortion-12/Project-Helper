@@ -75,7 +75,7 @@ export default function AdminPage() {
                   <div className="mb-2 text-zinc-200">Phone: {proj.phone}</div>
                   <div className="mb-2 text-zinc-200">Budget: {proj.budget}</div>
                   <div className="mb-2 text-zinc-200">Message: {proj.message}</div>
-                  <div className="text-xs text-zinc-400">{proj.createdAt ? new Date(proj.createdAt).toLocaleString() : ""}</div>
+                  <div className="text-xs text-zinc-400">{(proj.createdAt || proj.createdat) ? new Date(proj.createdAt || proj.createdat).toLocaleString() : ""}</div>
                 </div>
               ))}
             </div>
@@ -90,8 +90,9 @@ export default function AdminPage() {
                   <div className="mb-2 text-blue-300 font-semibold">Name: {req.name}</div>
                   <div className="mb-2 text-zinc-200">Email: {req.email}</div>
                   <div className="mb-2 text-zinc-200">Phone: {req.phone}</div>
-                  <div className="mb-2 text-zinc-200">Message: {req.message}</div>
-                  <div className="text-xs text-zinc-400">{req.createdAt ? new Date(req.createdAt).toLocaleString() : ""}</div>
+                  <div className="mb-2 text-zinc-200">Description: {req.project_description || req.message}</div>
+                  {req.additional_info && <div className="mb-2 text-zinc-400">Additional Info: {req.additional_info}</div>}
+                  <div className="text-xs text-zinc-400">{(req.createdAt || req.created_at) ? new Date(req.createdAt || req.created_at).toLocaleString() : ""}</div>
                 </div>
               ))}
             </div>

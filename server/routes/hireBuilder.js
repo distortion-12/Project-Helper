@@ -9,6 +9,13 @@ const supabase = createClient(supabaseUrl, supabaseServiceKey);
 router.post('/hire-builder', async (req, res) => {
   const { title, problem, tech, budget, deadline, name, email, phone, additional_info } = req.body;
   try {
+    const mergedAdditionalInfo = [
+      tech ? `Tech Requirements: ${tech}` : null,
+      additional_info || null,
+    ]
+      .filter(Boolean)
+      .join('\n\n');
+
     const { data, error } = await supabase
       .from('HireBuilderRequests')
       .insert([
@@ -17,14 +24,13 @@ router.post('/hire-builder', async (req, res) => {
           email,
           phone,
           project_description: problem,
-          tech_stack: tech,
           budget,
           timeline: deadline,
-          additional_info
+          additional_info: mergedAdditionalInfo || null
         }
       ]);
     if (error) {
-      return res.status(400).json({ success: false, error });
+      return res.status(400).json({ success: false, error: error.message });
     }
     return res.json({ success: true, data });
   } catch (err) {

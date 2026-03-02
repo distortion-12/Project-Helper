@@ -8,6 +8,9 @@ const steps = [
   { label: 'Tech Stack Requirements', key: 'tech', placeholder: 'e.g. Python, React' },
   { label: 'Budget', key: 'budget', placeholder: 'e.g. $100' },
   { label: 'Deadline', key: 'deadline', placeholder: 'e.g. 2026-03-15' },
+  { label: 'Your Name', key: 'name', placeholder: 'Enter your name' },
+  { label: 'Your Email', key: 'email', placeholder: 'Enter your email' },
+  { label: 'Your Phone Number', key: 'phone', placeholder: 'Enter your phone number' },
 ];
 
 
@@ -16,10 +19,12 @@ export default function HireBuilder() {
   const [form, setForm] = useState<any>({});
   const [submitted, setSubmitted] = useState(false);
   const [showError, setShowError] = useState(false);
+  const [submitError, setSubmitError] = useState('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setForm({ ...form, [steps[step].key]: e.target.value });
     setShowError(false);
+    setSubmitError('');
   };
 
   const handleNext = async () => {
@@ -31,15 +36,20 @@ export default function HireBuilder() {
     else {
       // Submit form to backend
       try {
-        await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/hire-builder`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/hire-builder`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(form),
         });
+        const payload = await response.json();
+        if (!response.ok || !payload?.success) {
+          throw new Error(payload?.error || 'Failed to submit request');
+        }
+        setSubmitted(true);
       } catch (err) {
-        // Optionally show error to user
+        const message = err instanceof Error ? err.message : 'Failed to submit request';
+        setSubmitError(message);
       }
-      setSubmitted(true);
     }
     setShowError(false);
   };
@@ -85,21 +95,24 @@ export default function HireBuilder() {
                   placeholder={steps[step].placeholder}
                   value={form[steps[step].key] || ''}
                   onChange={handleChange}
-                  type={step === 3 ? 'number' : step === 4 ? 'date' : 'text'}
+                    type={step === 3 ? 'number' : step === 4 ? 'date' : step === 6 ? 'email' : step === 7 ? 'tel' : 'text'}
                   autoFocus
                 />
               )}
-              <div className="flex items-center justify-between mt-2">
+                  <div className="flex items-center justify-between mt-2">
                 <button
                   className="px-8 py-3 rounded-full bg-indigo-500 hover:bg-indigo-600 text-white font-bold text-lg shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-indigo-400 disabled:bg-gray-500 disabled:cursor-not-allowed"
                   onClick={handleNext}
                   type="button"
                   disabled={!isStepFilled()}
                 >
-                  {step < steps.length - 1 ? 'Next' : 'Submit'}
+                    {step < steps.length - 1 ? 'Next' : 'Submit'}
                 </button>
                 <span className="text-xs text-white/40">Step {step + 1} of {steps.length}</span>
               </div>
+                  {submitError && (
+                    <div className="text-sm text-red-400">{submitError}</div>
+                  )}
             </motion.div>
           ) : (
             <motion.div
