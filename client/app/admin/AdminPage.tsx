@@ -10,7 +10,64 @@ export default function AdminPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [loggingOut, setLoggingOut] = useState(false);
+  const [username, setUsername] = useState("");
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [changingPassword, setChangingPassword] = useState(false);
+  const [passwordMessage, setPasswordMessage] = useState("");
+  const [passwordError, setPasswordError] = useState("");
   const router = useRouter();
+
+  async function handleChangePassword(e: React.FormEvent) {
+    e.preventDefault();
+    setPasswordError("");
+    setPasswordMessage("");
+
+    if (!username.trim() || !currentPassword || !newPassword || !confirmPassword) {
+      setPasswordError("Please fill all password fields.");
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      setPasswordError("New password and confirm password do not match.");
+      return;
+    }
+
+    if (newPassword.length < 8) {
+      setPasswordError("New password must be at least 8 characters.");
+      return;
+    }
+
+    try {
+      setChangingPassword(true);
+      const response = await fetch("/api/admin-change-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          username: username.trim(),
+          currentPassword,
+          newPassword,
+        }),
+      });
+
+      const json = await response.json();
+      if (!response.ok) {
+        setPasswordError(json?.error || "Failed to change password");
+        return;
+      }
+
+      setPasswordMessage("Password updated successfully.");
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+    } catch {
+      setPasswordError("Network error while updating password.");
+    } finally {
+      setChangingPassword(false);
+    }
+  }
 
   async function handleLogout() {
     try {
@@ -89,6 +146,54 @@ export default function AdminPage() {
             >
               Open Projects Page
             </Link>
+          </section>
+
+          <section className="mb-10 rounded-xl border border-zinc-800 bg-zinc-900 p-6">
+            <h2 className="text-2xl font-bold text-blue-300">Change Admin Password</h2>
+            <p className="mt-2 text-zinc-300">
+              Update an admin account password by verifying current password first.
+            </p>
+            <form onSubmit={handleChangePassword} className="mt-4 grid gap-3 md:grid-cols-2">
+              <input
+                type="text"
+                placeholder="Admin username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                className="rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-white"
+              />
+              <input
+                type="password"
+                placeholder="Current password"
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+                className="rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-white"
+              />
+              <input
+                type="password"
+                placeholder="New password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                className="rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-white"
+              />
+              <input
+                type="password"
+                placeholder="Confirm new password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                className="rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-white"
+              />
+              <div className="md:col-span-2">
+                <button
+                  type="submit"
+                  disabled={changingPassword}
+                  className="rounded-lg bg-blue-600 px-4 py-2 font-semibold text-white hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-70"
+                >
+                  {changingPassword ? "Updating..." : "Change Password"}
+                </button>
+              </div>
+              {passwordError ? <p className="md:col-span-2 text-red-400">{passwordError}</p> : null}
+              {passwordMessage ? <p className="md:col-span-2 text-green-400">{passwordMessage}</p> : null}
+            </form>
           </section>
 
           <h2 className="text-2xl font-bold mt-8 mb-4">Contact Messages</h2>
