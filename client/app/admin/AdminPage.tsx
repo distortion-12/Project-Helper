@@ -17,6 +17,8 @@ export default function AdminPage() {
   const [changingPassword, setChangingPassword] = useState(false);
   const [passwordMessage, setPasswordMessage] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [showChangePassword, setShowChangePassword] = useState(false);
+  const [showPasswords, setShowPasswords] = useState(false);
   const router = useRouter();
 
   async function handleChangePassword(e: React.FormEvent) {
@@ -148,54 +150,6 @@ export default function AdminPage() {
             </Link>
           </section>
 
-          <section className="mb-10 rounded-xl border border-zinc-800 bg-zinc-900 p-6">
-            <h2 className="text-2xl font-bold text-blue-300">Change Admin Password</h2>
-            <p className="mt-2 text-zinc-300">
-              Update an admin account password by verifying current password first.
-            </p>
-            <form onSubmit={handleChangePassword} className="mt-4 grid gap-3 md:grid-cols-2">
-              <input
-                type="text"
-                placeholder="Admin username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                className="rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-white"
-              />
-              <input
-                type="password"
-                placeholder="Current password"
-                value={currentPassword}
-                onChange={(e) => setCurrentPassword(e.target.value)}
-                className="rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-white"
-              />
-              <input
-                type="password"
-                placeholder="New password"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                className="rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-white"
-              />
-              <input
-                type="password"
-                placeholder="Confirm new password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                className="rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-white"
-              />
-              <div className="md:col-span-2">
-                <button
-                  type="submit"
-                  disabled={changingPassword}
-                  className="rounded-lg bg-blue-600 px-4 py-2 font-semibold text-white hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-70"
-                >
-                  {changingPassword ? "Updating..." : "Change Password"}
-                </button>
-              </div>
-              {passwordError ? <p className="md:col-span-2 text-red-400">{passwordError}</p> : null}
-              {passwordMessage ? <p className="md:col-span-2 text-green-400">{passwordMessage}</p> : null}
-            </form>
-          </section>
-
           <h2 className="text-2xl font-bold mt-8 mb-4">Contact Messages</h2>
           {messages.length === 0 ? (
             <div>No messages found.</div>
@@ -244,6 +198,80 @@ export default function AdminPage() {
               ))}
             </div>
           )}
+
+          <section className="mt-10 rounded-xl border border-zinc-800 bg-zinc-900 p-6">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <h2 className="text-2xl font-bold text-blue-300">Change Admin Password</h2>
+              <button
+                type="button"
+                onClick={() => {
+                  setShowChangePassword((prev) => !prev);
+                  setPasswordError("");
+                  setPasswordMessage("");
+                }}
+                className="rounded-lg bg-blue-600 px-4 py-2 font-semibold text-white hover:bg-blue-500"
+              >
+                {showChangePassword ? "Hide Form" : "Change Password"}
+              </button>
+            </div>
+
+            {showChangePassword ? (
+              <form onSubmit={handleChangePassword} className="mt-4 grid gap-3 md:grid-cols-2">
+                <div className="md:col-span-2 flex justify-end">
+                  <button
+                    type="button"
+                    onClick={() => setShowPasswords((prev) => !prev)}
+                    className="rounded-lg border border-zinc-700 px-3 py-2 text-sm font-semibold text-zinc-200 hover:bg-zinc-800"
+                  >
+                    {showPasswords ? "Hide Passwords" : "Show Passwords"}
+                  </button>
+                </div>
+                <input
+                  type="text"
+                  placeholder="Admin username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  className="rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-white"
+                />
+                <input
+                  type={showPasswords ? "text" : "password"}
+                  placeholder="Current password"
+                  value={currentPassword}
+                  onChange={(e) => setCurrentPassword(e.target.value)}
+                  className="rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-white"
+                />
+                <input
+                  type={showPasswords ? "text" : "password"}
+                  placeholder="New password"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  className="rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-white"
+                />
+                <input
+                  type={showPasswords ? "text" : "password"}
+                  placeholder="Confirm new password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className="rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-white"
+                />
+                <div className="md:col-span-2">
+                  <button
+                    type="submit"
+                    disabled={changingPassword}
+                    className="rounded-lg bg-blue-600 px-4 py-2 font-semibold text-white hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-70"
+                  >
+                    {changingPassword ? "Updating..." : "Update Password"}
+                  </button>
+                </div>
+                {passwordError ? <p className="md:col-span-2 text-red-400">{passwordError}</p> : null}
+                {passwordMessage ? <p className="md:col-span-2 text-green-400">{passwordMessage}</p> : null}
+              </form>
+            ) : (
+              <p className="mt-3 text-zinc-300">
+                Click the button to open the password change form.
+              </p>
+            )}
+          </section>
         </>
       )}
     </div>
