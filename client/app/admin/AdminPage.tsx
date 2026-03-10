@@ -1,5 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function AdminPage() {
   const [messages, setMessages] = useState([]);
@@ -7,6 +9,22 @@ export default function AdminPage() {
   const [hireRequests, setHireRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [loggingOut, setLoggingOut] = useState(false);
+  const router = useRouter();
+
+  async function handleLogout() {
+    try {
+      setLoggingOut(true);
+      await fetch("/api/admin-logout", {
+        method: "POST",
+        credentials: "include",
+      });
+    } finally {
+      router.replace("/");
+      router.refresh();
+      setLoggingOut(false);
+    }
+  }
 
   useEffect(() => {
     async function fetchAll() {
@@ -42,13 +60,37 @@ export default function AdminPage() {
 
   return (
     <div className="min-h-screen bg-black text-white p-8">
-      <h1 className="text-3xl font-bold mb-8">Admin Dashboard</h1>
+      <div className="mb-8 flex items-center justify-between gap-4">
+        <h1 className="text-3xl font-bold">Admin Dashboard</h1>
+        <button
+          type="button"
+          onClick={handleLogout}
+          disabled={loggingOut}
+          className="rounded-lg border border-red-500 px-4 py-2 text-sm font-semibold text-red-300 hover:bg-red-900/30 disabled:cursor-not-allowed disabled:opacity-70"
+        >
+          {loggingOut ? "Logging out..." : "Logout"}
+        </button>
+      </div>
       {loading ? (
         <div>Loading...</div>
       ) : error ? (
         <div className="text-red-400 text-lg">Error: {error}</div>
       ) : (
         <>
+          <section className="mb-10 rounded-xl border border-zinc-800 bg-zinc-900 p-6">
+            <h2 className="text-2xl font-bold text-green-300">Projects Library</h2>
+            <p className="mt-2 text-zinc-300">
+              Open all available projects with repo links so you can directly map student
+              requests to an existing project.
+            </p>
+            <Link
+              href="/admin/projects"
+              className="mt-4 inline-block rounded-lg bg-green-600 px-4 py-2 font-semibold text-white hover:bg-green-500"
+            >
+              Open Projects Page
+            </Link>
+          </section>
+
           <h2 className="text-2xl font-bold mt-8 mb-4">Contact Messages</h2>
           {messages.length === 0 ? (
             <div>No messages found.</div>
